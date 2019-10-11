@@ -1,4 +1,4 @@
-''''c
+'''
 #include<stdio.h>
 #include<fcntl.h>
 #include<errno.h>
@@ -58,4 +58,4 @@ int main(int argc, char* argv[])
 		printf("respond: %s\n",rmsg);
 	}
 }
-''''
+'''
