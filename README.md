@@ -67,18 +67,18 @@
 		}
 		Arr[i] = ptr;
 		ptr = strtok(NULL, " ");
-	  }
+      }
 
 - 위의 코드는 t_function에 들어있는 코드이다. client로 부터 전달된 msg를 filename, option, sentence부분으로 나눠주는 코드이다. t_function함수는 fork된 child process가 수행하는 부분이다.
 
       case 'r':
       {
-      	   if((fd = open(Arr[0],O_RDONLY)) < 0)
-	   {
-		finish = "fail to file open\n";
-		close(fd);
-		break;
-	   }
+		if((fd = open(Arr[0],O_RDONLY)) < 0)
+		{
+			finish = "fail to file open\n";
+			close(fd);
+			break;
+		}
 		if((tmp = read(fd, temp, size)) < 0)
 		{
 			perror("read error\n");
@@ -92,7 +92,7 @@
 
 		close(fd);
 		break;
-	  }
+      }
 	
 - read옵션으로 msg가 전달되었을 때 실행되는 코드이다. Arr[0]에는 file name이 들어있다. 해당 파일을 읽기전용모드로 open한 뒤 read를 통해 읽고자하는 byte만큼 읽어 temp에 저장한다. 저장된 temp는 finish에 복사되고 finish의 내용이 client로 전달된다. read에 있는 size변수는 Arr[2]에 저장되어 있는 byte 개수 string을 atoi를 통해 10진수 int형태로 변환한 것이다.	
 	
@@ -126,35 +126,35 @@
 - 옵션을 잘 못 입력했을 때 실행되는 error handling이다.
 
 
-   	if(mkfifo("./fifo1",0666) == -1)
-   	{
-       		printf("fail to make fifo1\n");
+      if(mkfifo("./fifo1",0666) == -1)
+      {
+		printf("fail to make fifo1\n");
 		exit(1);
-   	}
+      }
 
-   	if(mkfifo("./fifo2",0666) == -1)
-   	{
+      if(mkfifo("./fifo2",0666) == -1)
+      {
 		printf("fail to make fifo2\n");
 		exit(1);
-   	}
+      }
 
-   	if((readfd = open("./fifo1",O_RDONLY)) < 0)
-   	{
+      if((readfd = open("./fifo1",O_RDONLY)) < 0)
+      {
 		printf("fail to connect fifo1\n");
 		exit(1);
-   	}
+      }
 
-   	if((writefd = open("./fifo2",O_WRONLY)) < 0)
-   	{
- 		printf("fail to connect fifo2\n");
+      if((writefd = open("./fifo2",O_WRONLY)) < 0)
+      {
+		printf("fail to connect fifo2\n");
 		exit(1);
-   	}
+      }
 
 - server에서 mkfifo를 통해 named pipe(fifo)파일을 생성한다. 그 후 open을 통해 fifo와 연결한다. client와는 반대로 fifo1이 read, fifo2가 write를 담당하게 된다. 
 
       if((rd = read(readfd, msg, SIZE)) < 0)
       {
-     		printf("fail to read\n");
+		printf("fail to read\n");
 		exit(1);
       }
 		
@@ -162,13 +162,13 @@
       strcpy(temp,msg);
       if(pid == -1)
       {
-      		printf("fail to fork\n");
+		printf("fail to fork\n");
 		exit(1);
       }
 
       if(pid == 0)				// child
       {
-      		t_function((void *)temp);
+		t_function((void *)temp);
 		if((wr = write(writefd, finish, SIZE)) < 0)
 		{
 			printf("fail to write\n");
