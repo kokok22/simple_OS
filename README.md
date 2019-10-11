@@ -21,9 +21,9 @@
 
 - open을 통해 server가 mkfifo한 named pipe(fifo)와 연결한다. client의 경우 fifo1이 write, fifo2가 read로 설정되어 있고 server는 fifo1이 read, fifo2가 write로 설정되어 있다. 위처럼 2개로 나누어서 설정한 이유는 pipe는 단방향 통신이기 때문이다. fifo도 named pipe로 pipe의 일종이기 때문에 단방향이다. pipe로 양방향 통신을 하기 위해서는 2개 생성하여 read와 write를 각각 생성해 주어야 한다.
 
-              printf("\nenter the service you want\n");
-	      printf("ex) [filename] -r [number of bytes to read] or [filename] -w [data string to write]\n");
-	      gets(smsg);
+      printf("\nenter the service you want\n");
+      printf("ex) [filename] -r [number of bytes to read] or [filename] -w [data string to write]\n");
+      gets(smsg);
 
 - 받고자하는 smsg의 형식을 printf를 통해 알려주고 gets를 통해 입력받는다. 여기서 gets를 사용하는 이유는 -w option의 경우 sentence를 입력받는 것인데 띄어쓰기가 포함된 sentence가 들어올 수 있기 때문에 scanf가 아닌 gets를 사용한 것이다.
 
