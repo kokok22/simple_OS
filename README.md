@@ -1,14 +1,14 @@
-'''
-#include<stdio.h>
-#include<fcntl.h>
-#include<errno.h>
-#include<sys/types.h>
-#include<sys/stat.h>
-#include<string.h>
-#include<stdlib.h>
-#include<unistd.h>
-
-#define SIZE 100
+## header file 및 Define    
+    #include<stdio.h>
+    #include<fcntl.h>
+    #include<errno.h>
+    #include<sys/types.h>
+    #include<sys/stat.h>
+    #include<string.h>
+    #include<stdlib.h>
+    #include<unistd.h>
+    
+    #define SIZE 100
 
 int main(int argc, char* argv[])
 {
@@ -58,4 +58,4 @@ int main(int argc, char* argv[])
 		printf("respond: %s\n",rmsg);
 	}
 }
-'''
+''''
