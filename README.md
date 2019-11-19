@@ -125,3 +125,51 @@
 	}
 
 - pthread_create를 통해 총 4개의 thread를 생성해주었다. 2개는 writer로 2개는 reader로 동작한다. writer는 buffer의 값을 1증가시키며 reader는 buffer의 값을 읽어 출력해준다. 위의 코드를 그대로 실행시키면 예상과는 다르게 순서대로 출력되는 것이 아닌 뒤죽박죽하여 출력되는 것을 확인할 수있다. 동기화가 되어있지 않아서 이다. 위와 같은 문제를 해결하기 위해서는 아래의 코드들은 추가해주어야 한다.
+
+	  sem_t readnum;
+	  sem_t writer;
+
+	  int main(){
+
+	  	∙∙∙∙중략∙∙∙∙
+
+	  	sem_init(&writenum,0,1);
+	  }
+
+- readnum은 읽을 수 있는 사람의 숫자이고 writer는 쓸 수 있는 사람의 숫자이다. 다른 사람이 작성을 하고 있을 때 작성을 하게 되면 중복되어 값이 계산되지 않는 경우가 발생할 수 있기 때문에, 한명의 writer만 buffer에 접근할 수 있도록 writenum은 1로 초기화 시켜준다.
+
+	  void* writer(void* arg){
+
+	  	∙∙∙∙중략∙∙∙∙
+
+	  	sem_wait(&writenum);
+	  	sem_init(&readnum,0,0);
+
+	  	∙∙∙∙중략∙∙∙∙
+
+	  	sem_init(&readnum,0,2);
+	  	sem_post(&writenum);
+
+	  	∙∙∙∙중략∙∙∙∙
+
+	  }
+
+- writer 함수이다. 처음에 sem_wait함수를 통해 쓸 수 있는 상태인지 확인을 한다. 그리고 쓸 수 있는 상태라는 것이 확인되면 sem_init을 통해 readnum함수를 0으로 초기화 시켜준다. 이유는 쓰고있는 동안 reader가 접근하지 못하도록 하기 위해서이다. 이러한 작업을 마치고 buffer의 값을 1 증가시키면 다시 sem_init으로 readnum을 2로 초기화 및 sem_post로 writenum의 값을 1 증가시켜준다. 여기서 2는 임의의 숫자로 전체 reader의 숫자보다 크면 상관없다. writernum의 값이 1이 되었기 때문에 이제 다른 writer가 접근 가능하다.
+
+	  void* reader(void* arg){
+
+	  	∙∙∙∙중략∙∙∙∙
+
+	  	sem_wait(&readnum);
+	  	sem_init(&writenum,0,0);
+
+	  	∙∙∙∙중략∙∙∙∙
+
+	  	sem_post(&writenum);
+	  	sem_post(&readnum);
+
+	  	∙∙∙∙중략∙∙∙∙
+
+	  }
+
+- reader함수이다. 처음에 sem_wait를 통해 현재 writer가 데이터를 작성하고 있는지 확인해 준다. 만약 데이터를 작성하고 있지 않는다면 sem_init을 통해 writer의 값을 0으로 설정해준다. 읽는 동안 write하지 못하도록 설정하는 것이다. semaphore 설정을 마친 후 데이터를 읽어 화면에 출력해준다. 작업이 끝이나면 sem_post로 wirtenum과 readnum을 각각 증가시켜준다. 이를 통해 다른 thread들이 작업을 할 수 있게 된다. 위와 같은 동기화 코드들을 추가해줌으로써 buffer의 값이 순차적으로 증가하게 되며, buffer의 값을 읽어올 때에도 변경되기 전의 값이 아닌 가장 최근에 변경된 값을 읽어올 수 있게된다.
