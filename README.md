@@ -1,25 +1,43 @@
-# 운영체제 프로젝트 1
+# 운영체제 프로젝트 2
 
-## 1. 프로젝트 개요
-  - client와 server가 named pipe(fifo)를 이용하여 서로 통신하는 프로그램이다. client는 access하고자 하는 file name과 option, contents를 입력하고 fifo를 통해 server에게 전달한다. server는 fork 함수를 통해 child proccess를 생성하고 전달받은 내용을 수행시킨다. 수행을 마친 child proccess는 종료되고 수행 결과를 client에게 전달한다.
+## 1.  프로젝트 개요
+  - 동기화 Problem인 Producer/Consumer Problem과 Reader/Writer Problem을 구현하고, race condition이 발생하는 것을 확인. 확인 후 semaphore를 활용하여 해당 Problem을 해결하는 프로젝트이다. 
 
 ## 2. 코드 설명
 
-### 1) Client.c  
+### 1) PC_Problem.c  
 
-	if((writefd = open("./fifo1",O_WRONLY)) < 0)
-	{
-		printf("fail to open fifo1\n");
-		exit(1);
+	int main(){
+
+	pthread_t thread[2];
+	pthread_create(&thread[0], NULL, producer, NULL);
+	pthread_create(&thread[1], NULL, consumer, NULL);
+
+	∙∙∙∙중략∙∙∙∙
+	
 	}
 
-	if((readfd = open("./fifo2",O_RDONLY)) < 0)
-	{
-		printf("fail to open fifo2\n");
-		exit(1);
+	void* producer(void* arg){
+		
+		∙∙∙∙중략∙∙∙∙
+		
+		buffer[in] = rand()+1;
+		buffer = (int*)realloc(buffer, i*sizeof(int));
+		
+		∙∙∙∙중략∙∙∙∙
 	}
 
-- open을 통해 server가 mkfifo한 named pipe(fifo)와 연결한다. client의 경우 fifo1이 write, fifo2가 read로 설정되어 있고 server는 fifo1이 read, fifo2가 write로 설정되어 있다. 위처럼 2개로 나누어서 설정한 이유는 pipe는 단방향 통신이기 때문이다. fifo도 named pipe로 pipe의 일종이기 때문에 단방향이다. pipe로 양방향 통신을 하기 위해서는 2개 생성하여 read와 write를 각각 생성해 주어야 한다.
+	void* consumer(void* arg){
+
+		∙∙∙∙중략∙∙∙∙
+	
+		print("%d's data is %d\n",i,buffer[out]);
+	
+		∙∙∙∙중략∙∙∙∙
+	
+	}
+
+- pthread_create를 통해 2개의 thread를 생성하고 각각의 thread가 producer함수와 consumer함수의 기능을 동작하도록 한다.
 
       printf("\nenter the service you want\n");
       printf("ex) [filename] -r [number of bytes to read] or [filename] -w [data string to write]\n");
