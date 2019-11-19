@@ -45,6 +45,7 @@
 	  int main(int argc, char* argv[]){
 
 	  	∙∙∙∙중략∙∙∙∙
+		
 	  	sem_post(&consume);
 
 	  	∙∙∙∙중략∙∙∙∙
@@ -66,6 +67,22 @@
 	  }
 
 - producer함수이다. 버퍼에 난수를 넣기전에 sem_wait함수를 실행시키는 것을 확인할 수 있다. 이는 변수의 값이 0인지 확인하는 것이다. 만약 0이라면 thread의 동작을 멈추고 변수가 0이상이 될 때까지 기다린다. 변수가 0이상이 된다면 변수의 값을 1감소시킨다음 코드를 진행시킨다. 위의 경우 처음 main 함수에서 sem_wait을 통해 consume의 값을 1 증가시켰기 때문에 sem_wait을 지나치게 되고 consume의 값은 0으로 변한다. 난수를 버퍼에 넣고, sem_post함수를 통해 product의 값을 1 증가시킨다.
+
+	  void* consumer(void* arg){
+	
+	  	∙∙∙∙중략∙∙∙∙
+
+	  	sem_wait(&product);
+	  	out++;
+	  	printf("%d's data is %d\n",i,buffer[out]);
+	  	sem_post(&consume);
+
+	  	∙∙∙∙중략∙∙∙∙
+	
+	  }
+
+- consumer함수이다. 우선 producer가 데이터를 생성할 때 까지 기다린다. 데이터를 생성하게 되면 product의 값이 1로 변경이 된다. 현재 product의 값은 0이므로 sem_wait함수에서 기다리고 있다가 생성이 되서 1이 되면 코드가 진행된다. out을 1증가 시키고 producer가 생성한 데이터를 출력한다. 그리고 데이터를 사용했다는 뜻으로 sem_post함수를 통해 consume 변수의 값을 1 증가시킨다. consume변수의 값이 증가되면 다시 producer함수가 시작된다. 위와 같은 방법으로 서로 한번씩 번갈아가면서 진행이 되며 race condition문제를 해결한다.
+
 
      
 ### 2) RW_Problem.c
