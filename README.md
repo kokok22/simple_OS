@@ -13,7 +13,7 @@
 		pthread_create(&thread[0], NULL, producer, NULL);
 		pthread_create(&thread[1], NULL, consumer, NULL);
 
-	∙∙∙∙중략∙∙∙∙
+		∙∙∙∙중략∙∙∙∙
 	
 	}
 
