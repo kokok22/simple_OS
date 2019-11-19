@@ -9,9 +9,9 @@
 
 	int main(){
 
-	pthread_t thread[2];
-	pthread_create(&thread[0], NULL, producer, NULL);
-	pthread_create(&thread[1], NULL, consumer, NULL);
+		pthread_t thread[2];
+		pthread_create(&thread[0], NULL, producer, NULL);
+		pthread_create(&thread[1], NULL, consumer, NULL);
 
 	∙∙∙∙중략∙∙∙∙
 	
