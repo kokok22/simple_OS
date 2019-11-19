@@ -88,4 +88,40 @@
     
 ### 2) RW_Problem.c
 
+	int buffer = 0;
 
+	int main(){
+
+		∙∙∙∙중략∙∙∙∙
+
+		pthread_t thread[4];
+		for(i=0;i<2;i++)
+			pthread_creaete(&thread[i],NULL,reader,NULL);
+		for(i=0;i<2;i++)
+			pthread_create(&thread[i+2],NULL,writer,NULL);
+
+		∙∙∙∙중략∙∙∙∙
+
+	}
+
+	void* reader(void* arg){
+
+		∙∙∙∙중략∙∙∙∙
+
+		printf("read data is %d\n",buffer);
+
+		∙∙∙∙중략∙∙∙∙
+
+	}
+
+	void* writer(void* arg){
+
+		∙∙∙∙중략∙∙∙∙
+
+		buffer += 1;
+
+		∙∙∙∙중략∙∙∙∙
+
+	}
+
+- pthread_create를 통해 총 4개의 thread를 생성해주었다. 2개는 writer로 2개는 reader로 동작한다. writer는 buffer의 값을 1증가시키며 reader는 buffer의 값을 읽어 출력해준다. 위의 코드를 그대로 실행시키면 예상과는 다르게 순서대로 출력되는 것이 아닌 뒤죽박죽하여 출력되는 것을 확인할 수있다. 동기화가 되어있지 않아서 이다. 위와 같은 문제를 해결하기 위해서는 아래의 코드들은 추가해주어야 한다.
